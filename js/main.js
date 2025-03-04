@@ -11,11 +11,43 @@
     };
     spinner();
     
+    // Dynamic Quote
+    const quotes = [
+        "Work for something because it is good, not just because it stands a chance to succeed. - Vaclav Havel",
+        "Quality is not an act, it's a habit. - Aristotle",
+        "The only way to do great work is to love what you do. - Steve Jobs",
+        "Success is not final, failure is not fatal: it is the courage to continue that counts. - Winston Churchill",
+        "The future depends on what you do today. - Mahatma Gandhi"
+    ];
     
-    // Initiate the wowjs
-    new WOW().init();
+    function updateQuote() {
+        const quoteElement = document.getElementById('dynamic-quote');
+        if (quoteElement) {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            quoteElement.textContent = quotes[randomIndex];
+        }
+    }
+    
+    // Update quote when page loads and when page is refreshed
+    window.addEventListener('load', updateQuote);
+    if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_RELOAD) {
+        updateQuote();
+    }
 
-
+    // Email copy functionality
+    window.copyEmail = function() {
+        const email = 'vaidya.mansi95@gmail.com';
+        navigator.clipboard.writeText(email).then(function() {
+            const copyButton = document.querySelector('[data-tooltip="Copy email"]');
+            copyButton.classList.add('tooltip-visible');
+            setTimeout(() => {
+                copyButton.classList.remove('tooltip-visible');
+            }, 2000);
+        }).catch(function(err) {
+            console.error('Failed to copy email:', err);
+        });
+    };
+    
     // Navbar on scrolling
     $(window).scroll(function () {
         if ($(this).scrollTop() > 300) {
@@ -24,7 +56,6 @@
             $('.navbar').fadeOut('slow').css('display', 'none');
         }
     });
-
 
     // Smooth scrolling on the navbar links
     $(".navbar-nav a").on('click', function (event) {
@@ -42,7 +73,6 @@
         }
     });
     
-    
     // Back to top button
     $(window).scroll(function () {
         if ($(this).scrollTop() > 300) {
@@ -56,7 +86,6 @@
         return false;
     });
     
-
     // Typed Initiate
     if ($('.typed-text-output').length == 1) {
         var typed_strings = $('.typed-text').text();
@@ -68,8 +97,7 @@
             loop: true
         });
     }
-
-
+    
     // Modal Video
     var $videoSrc;
     $('.btn-play').click(function () {
@@ -82,23 +110,17 @@
     $('#videoModal').on('hide.bs.modal', function (e) {
         $("#video").attr('src', $videoSrc);
     })
-
-
     // Facts counter
     $('[data-toggle="counter-up"]').counterUp({
         delay: 10,
         time: 2000
     });
-
-
     // Skills
     $('.skill').waypoint(function () {
         $('.progress .progress-bar').each(function () {
             $(this).css("width", $(this).attr("aria-valuenow") + '%');
         });
     }, {offset: '80%'});
-
-
     // Portfolio isotope and filter
     var portfolioIsotope = $('.portfolio-container').isotope({
         itemSelector: '.portfolio-item',
@@ -107,11 +129,8 @@
     $('#portfolio-flters li').on('click', function () {
         $("#portfolio-flters li").removeClass('active');
         $(this).addClass('active');
-
-        portfolioIsotope.isotope({filter: $(this).data('filter')});
+    portfolioIsotope.isotope({filter: $(this).data('filter')});
     });
-
-
     // Testimonials carousel
     $(".testimonial-carousel").owlCarousel({
         autoplay: true,
@@ -120,7 +139,26 @@
         dots: true,
         loop: true,
     });
-
     
-})(jQuery);
+    })(jQuery);
+
+function copyEmail() {
+    const email = 'vaidya.mansi95@gmail.com';
+    navigator.clipboard.writeText(email).then(() => {
+        const button = document.querySelector('.btn-icon[data-tooltip="Copy email"]');
+        const originalIcon = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check"></i>';
+        button.setAttribute('data-tooltip', 'Copied!');
+        button.classList.add('tooltip-visible');
+        
+        setTimeout(() => {
+            button.innerHTML = originalIcon;
+            button.setAttribute('data-tooltip', 'Copy email');
+            button.classList.remove('tooltip-visible');
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy email:', err);
+        alert('Failed to copy email. Please try again.');
+    });
+}
 
